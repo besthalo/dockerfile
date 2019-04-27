@@ -1,0 +1,27 @@
+filebeat.shutdown_timeout: 5s
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /usr/src/app/log/*.log
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+setup.template.settings:
+  index.number_of_shards: 3
+setup.kibana:
+  host: "10.198.101.130:5601"
+output.kafka:
+  enabled: true
+  hosts: []
+  topic: "applogv3_filebeat"
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000
+  client_id: applogv3_beats
+  worker: 10
+  max_retries: 3
+  keep_alive: 300
+path.data: /usr/src/app/log
